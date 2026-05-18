@@ -1,0 +1,6 @@
+{
+  "name": "HUJAN JAM 6: MIMPI BURUK",
+  "description": "Sebuah horor surreal bertema Maghrib di gang sempit Indonesia. Berlarilah pulang sebelum mimpi ini menjadi kenyataan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

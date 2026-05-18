@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HUJAN JAM 6: MIMPI BURUK</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --rain:#b39ddb; --rain-dark:#4a148c;
+  --yellow:#f8bbd0; --orange:#ce93d8; --green:#80cbc4;
+  --night:#0d0520; --text:#e8d5f5;
+  --danger:#ef9a9a; --ui:rgba(13,5,32,0.92);
+  --dream1:#1a0533; --dream2:#0d1a3a; --dream3:#1a0d2e;
+}
+
+html, body {
+  width:100%; height:100%;
+  background:var(--night);
+  overflow:hidden;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+#wrap {
+  position:relative;
+  width:100vw; height:100vh;
+}
+
+canvas {
+  display:block;
+  width:100%; height:100%;
+  touch-action:none;
+  filter: saturate(1.4) hue-rotate(0deg);
+  animation: dreamShift 18s infinite alternate ease-in-out;
+}
+
+@keyframes dreamShift {
+  0%   { filter: saturate(1.3) hue-rotate(0deg) brightness(0.95); }
+  33%  { filter: saturate(1.6) hue-rotate(18deg) brightness(1.05); }
+  66%  { filter: saturate(1.2) hue-rotate(-12deg) brightness(0.92); }
+  100% { filter: saturate(1.5) hue-rotate(28deg) brightness(1.0); }
+}
+
+/* ===== DREAM OVERLAY EFFECTS ===== */
+#grain {
+  position:absolute; inset:0;
+  pointer-events:none; z-index:9;
+  opacity:0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: grainMove 0.15s steps(1) infinite;
+  mix-blend-mode: overlay;
+}
+@keyframes grainMove {
+  0%  { background-position:0 0; }
+  20% { background-position:-50px -30px; }
+  40% { background-position:30px -60px; }
+  60% { background-position:-70px 20px; }
+  80% { background-position:50px 40px; }
+  100%{ background-position:-20px -50px; }
+}
+
+#chromatic {
+  position:absolute; inset:0;
+  pointer-events:none; z-index:10;
+  background: radial-gradient(ellipse at center,
+    transparent 55%,
+    rgba(140,80,200,0.18) 75%,
+    rgba(80,40,160,0.35) 100%);
+  mix-blend-mode: screen;
+}
+
+#scanlines {
+  position:absolute; inset:0;
+  pointer-events:none; z-index:11;
+  opacity:0.04;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(180,120,255,0.4) 3px,
+    rgba(180,120,255,0.4) 4px
+  );
+}
+
+#mist {
+  position:absolute; inset:0;
+  pointer-events:none; z-index:6;
+  background: linear-gradient(
+    180deg,
+    rgba(100,50,180,0.0) 0%,
+    rgba(100,50,180,0.0) 60%,
+    rgba(60,20,120,0.25) 80%,
+    rgba(40,10,80,0.4) 100%
+  );
+}
+
+/* ===== SCREENS ===== */
+.scr {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:50;
+}
+.scr.off { display:none; }
+
+#sTitle {
+  background: radial-gradient(ellipse at 50% 40%,
+    #1a0840 0%, #0d0520 50%, #050210 100%);
+}
+
+.t-main {
+  font-size:clamp(50px,18vw,96px);
+  font-weight:900;
+  color:#e8d0ff;
+  text-align:center;
+  line-height:0.9;
+  letter-spacing:-2px;
+  text-shadow:
+    0 0 20px rgba(180,120,255,0.9),
+    0 0 60px rgba(140,80,220,0.6),
+    0 0 100px rgba(100,50,180,0.4),
+    4px 4px 0 #2d0060;
+  margin-bottom:6px;
+  animation: titlePulse 4s ease-in-out infinite;
+}
+@keyframes titlePulse {
+  0%,100% { text-shadow: 0 0 20px rgba(180,120,255,0.9),0 0 60px rgba(140,80,220,0.6),0 0 100px rgba(100,50,180,0.4),4px 4px 0 #2d0060; }
+  50%      { text-shadow: 0 0 35px rgba(210,160,255,1.0),0 0 90px rgba(180,120,255,0.8),0 0 140px rgba(140,80,220,0.5),4px 4px 0 #3d0080; }
+}
+.t-main span {
+  color:#ffd6f0;
+  text-shadow:
+    0 0 20px rgba(255,180,230,0.9),
+    0 0 50px rgba(220,130,200,0.6),
+    4px 4px 0 #5a0040;
+}
+.t-tag {
+  font-size:clamp(11px,3vw,14px);
+  color:rgba(220,180,255,0.55);
+  text-align:center;
+  font-style:italic;
+  margin-bottom:28px;
+  padding:0 20px;
+  letter-spacing:1px;
+}
+.hs-box { text-align:center; margin-bottom:24px; }
+.hs-box .lbl { font-size:10px; letter-spacing:4px; color:rgba(200,160,255,0.4); text-transform:uppercase; }
+.hs-box .val {
+  font-size:clamp(22px,7vw,34px); font-weight:900;
+  color:#ffd6f0;
+  text-shadow:0 0 16px rgba(255,180,220,0.6);
+}
+
+.menu { display:flex; flex-direction:column; gap:12px; width:min(280px,80vw); }
+
+.btn {
+  padding:clamp(12px,4vw,16px) 0;
+  border:none; cursor:pointer;
+  font-size:clamp(16px,5vw,20px);
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  border-radius:6px;
+  transition:transform .15s, opacity .15s, box-shadow .3s;
+  width:100%;
+}
+.btn:active { transform:scale(0.95); opacity:0.85; }
+
+.btn-p {
+  background: linear-gradient(135deg, #7b2fff, #c44dff);
+  color:#fff;
+  box-shadow: 0 0 20px rgba(180,80,255,0.5), 0 4px 0 #3d0080;
+}
+.btn-s {
+  background:transparent; color:#e0c0ff;
+  border:1.5px solid rgba(180,100,255,0.45);
+}
+.btn-d {
+  background:transparent; color:rgba(255,180,200,0.7);
+  border:1.5px solid rgba(255,150,180,0.3);
+  font-size:clamp(13px,4vw,16px);
+}
+
+/* HUD */
+#hud {
+  position:absolute; inset:0;
+  pointer-events:none; z-index:20;
+  padding:clamp(8px,2.5vw,14px);
+}
+#hud.off { display:none; }
+
+.hud-row {
+  display:flex; justify-content:space-between;
+  align-items:flex-start; pointer-events:none;
+}
+
+.stat {
+  background:rgba(20,5,40,0.82);
+  border:1px solid rgba(180,100,255,0.2);
+  border-radius:6px;
+  padding:4px 10px;
+  backdrop-filter:blur(8px);
+  box-shadow: 0 0 10px rgba(140,60,220,0.1);
+}
+.stat .lbl { font-size:8px; letter-spacing:3px; color:rgba(200,160,255,0.4); text-transform:uppercase; }
+.stat .val {
+  font-size:clamp(18px,5vw,26px);
+  font-weight:900; color:#e8d0ff; line-height:1.1;
+}
+.val.gold { color:#ffd6f0; text-shadow:0 0 8px rgba(255,180,220,0.5); }
+.val.grn  { color:#80cbc4; text-shadow:0 0 8px rgba(128,203,196,0.5); }
+
+.stam-wrap {
+  background:rgba(20,5,40,0.82);
+  border:1px solid rgba(128,203,196,0.25);
+  border-radius:6px; padding:4px 10px;
+  min-width:clamp(90px,25vw,130px);
+  backdrop-filter:blur(8px);
+}
+.stam-bg { height:5px; background:rgba(128,203,196,0.12); border-radius:3px; margin-top:3px; overflow:hidden; }
+.stam-fill {
+  height:100%;
+  background:linear-gradient(90deg,#80cbc4,#b2dfdb);
+  border-radius:3px; transition:width .2s;
+  box-shadow:0 0 8px rgba(128,203,196,0.6);
+}
+
+/* Distance bar */
+.dist-wrap {
+  position:absolute;
+  bottom:clamp(80px,18vw,110px); left:50%;
+  transform:translateX(-50%);
+  width:min(300px,80vw); text-align:center;
+}
+.dist-lbl { font-size:9px; letter-spacing:3px; color:rgba(200,160,255,0.35); text-transform:uppercase; margin-bottom:3px; }
+.dist-track {
+  height:6px; background:rgba(255,255,255,0.05);
+  border-radius:3px; border:1px solid rgba(180,100,255,0.15); overflow:hidden;
+}
+.dist-fill {
+  height:100%;
+  background:linear-gradient(90deg,#9c4dff,#ffd6f0);
+  border-radius:3px; transition:width .5s;
+  box-shadow:0 0 10px rgba(180,80,255,0.5);
+}
+.dist-txt { font-size:clamp(12px,3.5vw,15px); color:#e8d0ff; margin-top:3px; }
+
+/* MOBILE CONTROLS */
+#ctrlBar {
+  position:absolute; bottom:0; left:0; right:0;
+  height:clamp(68px,18vw,90px);
+  display:flex; align-items:center; justify-content:space-around;
+  padding:0 16px clamp(8px,3vw,14px);
+  background:linear-gradient(0deg,rgba(13,5,32,0.95),transparent);
+  z-index:30; pointer-events:all;
+}
+#ctrlBar.off { display:none; }
+
+.ctrl-btn {
+  background:rgba(120,60,200,0.15);
+  border:1.5px solid rgba(180,100,255,0.35);
+  border-radius:50%;
+  width:clamp(52px,14vw,68px); height:clamp(52px,14vw,68px);
+  font-size:clamp(22px,6vw,28px);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .12s;
+  touch-action:manipulation;
+  box-shadow: 0 0 12px rgba(140,60,220,0.2);
+}
+.ctrl-btn:active {
+  background:rgba(180,80,255,0.35);
+  transform:scale(0.9);
+  box-shadow: 0 0 24px rgba(180,80,255,0.6);
+}
+.ctrl-btn.jump  { border-color:rgba(180,100,255,0.6); background:rgba(140,60,220,0.2); }
+.ctrl-btn.slide { border-color:rgba(128,203,196,0.5); background:rgba(80,180,170,0.1); }
+.ctrl-btn.dash  { border-color:rgba(255,150,200,0.5); background:rgba(200,80,150,0.1); }
+
+.ctrl-lbl { font-size:9px; letter-spacing:1px; color:rgba(200,160,255,0.5); text-align:center; margin-top:3px; text-transform:uppercase; }
+.ctrl-item { display:flex; flex-direction:column; align-items:center; }
+
+#notif {
+  position:absolute; top:clamp(70px,15vw,90px); left:50%;
+  transform:translateX(-50%) translateY(-10px);
+  background:rgba(20,5,40,0.95);
+  border:1px solid rgba(128,203,196,0.4);
+  border-radius:6px; padding:7px 18px;
+  font-size:clamp(11px,3vw,13px);
+  color:#80cbc4; letter-spacing:1px;
+  opacity:0; transition:all .3s; z-index:60;
+  pointer-events:none; white-space:nowrap;
+  box-shadow:0 0 16px rgba(80,180,170,0.3);
+}
+#notif.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* CREDITS */
+#sCred { background:radial-gradient(ellipse at 50% 40%, #1a0840 0%, #0d0520 60%, #050210 100%); }
+.cred-name { font-size:clamp(32px,10vw,56px); font-weight:900; color:#e8d0ff; text-shadow:0 0 40px rgba(180,100,255,0.6); margin-bottom:8px; text-align:center; }
+
+.ft {
+  position:absolute; font-weight:800; pointer-events:none;
+  animation:ftUp 1.2s ease-out forwards; z-index:55;
+  font-size:clamp(12px,3.5vw,16px); white-space:nowrap;
+  text-shadow:0 0 12px currentColor;
+}
+@keyframes ftUp {
+  0%   { opacity:1; transform:translateY(0) scale(1); }
+  80%  { opacity:1; transform:translateY(-55px) scale(1.1); }
+  100% { opacity:0; transform:translateY(-75px) scale(0.8); }
+}
+
+.vign {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at center,transparent 35%,rgba(20,5,50,0.5) 70%,rgba(10,2,30,0.8) 100%);
+  pointer-events:none; z-index:5;
+}
+
+#sFlash {
+  position:absolute; inset:0;
+  background:rgba(180,60,220,0.1);
+  pointer-events:none; z-index:7;
+  animation:sfPulse 1.4s infinite;
+}
+@keyframes sfPulse { 0%,100%{opacity:0} 50%{opacity:1} }
+
+#dustCv {
+  position:absolute; inset:0;
+  pointer-events:none; z-index:8;
+  opacity:0.6;
+}
+
+#bottom-credit {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(220,180,255,0.3);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="cv"></canvas>
+
+  <div class="vign"></div>
+  <canvas id="dustCv"></canvas>
+  <div id="grain"></div>
+  <div id="chromatic"></div>
+  <div id="scanlines"></div>
+  <div id="mist"></div>
+  <div id="sFlash" style="display:none"></div>
+
+  <!-- INTRO SCREEN -->
+  <div class="scr off" id="sIntro" style="background:#000; text-align:center; padding:20px;">
+    <div id="intro-text" style="color:#e8d5f5; font-size:18px; line-height:1.8; max-width:400px; opacity:0; transition:opacity 1s;">
+      Sore itu, kamu tertidur lelap saat waktu Maghrib tiba...<br><br>
+      Tiba-tiba, duniamu berubah menjadi gelap dan dingin.<br><br>
+      Kamu terjebak dalam mimpi buruk yang tak berujung.
+    </div>
+  </div>
+
+  <!-- TITLE SCREEN -->
+  <div class="scr" id="sTitle">
+    <div class="t-main">HUJAN<br><span>JAM 6</span></div>
+    <div class="t-tag">"Atau ini hanya mimpi...?"</div>
+    <div class="hs-box">
+      <div class="lbl">Rekor Terbaik</div>
+      <div class="val" id="hsVal">0 m</div>
+    </div>
+    <div class="menu">
+      <button class="btn btn-p" onclick="startGame()">▶ MULAI LARI</button>
+      <button class="btn btn-s" onclick="showCred()">✦ KREDIT</button>
+    </div>
+    <div id="bottom-credit">Dibuat oleh Kelompok 1</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" class="off">
+    <div class="hud-row">
+      <div>
+        <div class="stat" style="margin-bottom:7px">
+          <div class="lbl">Nyawa</div>
+          <div class="val" id="hLives" style="color:#ef9a9a">❤️❤️❤️❤️❤️</div>
+        </div>
+        <div class="stat" style="margin-bottom:7px">
+          <div class="lbl">Skor</div>
+          <div class="val gold" id="hScore">0</div>
+        </div>
+        <div class="stam-wrap">
+          <div class="lbl">Stamina</div>
+          <div class="stam-bg"><div class="stam-fill" id="sFill" style="width:100%"></div></div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="stat" style="margin-bottom:7px">
+          <div class="lbl">Combo</div>
+          <div class="val grn" id="hCombo">×1</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Limbus</div>
+          <div class="val" id="hWeather" style="font-size:20px">👁️</div>
+        </div>
+      </div>
+    </div>
+    <div id="dream-text" style="position:absolute; top:25%; left:50%; transform:translateX(-50%); color:rgba(220,180,255,0.4); font-style:italic; font-size:12px; pointer-events:none; text-align:center;"></div>
+    <div class="dist-wrap">
+      <div class="dist-lbl">Jarak Terjebak</div>
+      <div class="dist-track"><div class="dist-fill" id="dFill" style="width:0%"></div></div>
+      <div class="dist-txt" id="dTxt">Berlari...</div>
+    </div>
+  </div>
+
+  <div id="notif"></div>
+
+  <!-- CONTROLS -->
+  <div id="ctrlBar" class="off">
+    <div class="ctrl-item">
+      <div class="ctrl-btn slide" onclick="doSlide()">⬇️</div>
+      <div class="ctrl-lbl">Slide</div>
+    </div>
+    <div class="ctrl-item">
+      <div class="ctrl-btn jump" onclick="doJump()">⬆️</div>
+      <div class="ctrl-lbl">Lompat</div>
+    </div>
+    <div class="ctrl-item">
+      <div class="ctrl-btn dash" onclick="doDash()">⚡</div>
+      <div class="ctrl-lbl">Dash</div>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div class="scr off" id="sOver">
+    <div class="ov-title" style="color:#ef9a9a">💀 TERTANGKAP</div>
+    <div class="ov-sub" id="oReason">Bayangan Maghrib telah menjemputmu...</div>
+    <div class="score-box">
+      <div style="text-align:center;color:#ffd6f0;margin-bottom:10px;font-size:14px">Kamu masih bermimpi.</div>
+      <div class="stat" style="width:100%;text-align:center">
+          <div class="lbl">Skor Akhir</div>
+          <div class="val" id="oScore">0</div>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="btn btn-p" onclick="restartGame()">↺ COBA LAGI</button>
+      <button class="btn btn-d" onclick="goTitle()">⌂ MENU BERANDA</button>
+    </div>
+    <div id="bottom-credit">Dibuat oleh Kelompok 1</div>
+  </div>
+
+  <!-- ENDING SCREEN -->
+  <div class="scr off" id="sEnd">
+    <div style="font-size:48px;margin-bottom:10px">🏠</div>
+    <div class="ov-title" style="color:#80cbc4;font-size:clamp(32px,10vw,56px)">TERBANGUN?</div>
+    <div style="background:rgba(20,5,40,0.9);border:1px solid rgba(180,100,255,0.2);border-radius:8px;padding:16px 22px;margin-bottom:16px;max-width:300px;font-size:clamp(13px,3.5vw,15px);line-height:1.7;color:#e0c0ff;text-align:center">
+      Kamu menyentuh pintu rumah... dan seketika segalanya memudar.<br>
+      <span style="color:#ffd6f0;font-weight:700">Ibu:</span>
+      <span style="font-style:italic;color:#ffd6f0"> "Bangun, Le. Sudah jam 6 sore, jangan tidur pas Maghrib."</span>
+    </div>
+    <div class="menu">
+      <button class="btn btn-p" onclick="restartGame()">↺ MIMPI LAGI</button>
+      <button class="btn btn-s" onclick="goTitle()">⌂ MENU UTAMA</button>
+    </div>
+    <div id="bottom-credit">Dibuat oleh Kelompok 1</div>
+  </div>
+
+  <!-- CREDITS SCREEN -->
+  <div class="scr off" id="sCred">
+    <div class="cred-name">Kelompok 1</div>
+    <div style="font-size:12px;letter-spacing:3px;color:rgba(200,160,255,0.4);margin-bottom:12px">HUJAN JAM 6 · 2026</div>
+    <div style="font-size:13px;color:rgba(200,160,255,0.4);line-height:1.9;text-align:center;margin-bottom:28px">
+      Terinspirasi dari suasana mistis<br>Maghrib di gang perkampungan.
+    </div>
+    <button class="btn btn-s" style="width:min(240px,70vw)" onclick="goTitle()">← KEMBALI</button>
+  </div>
+</div>
+
+<script>
+const cv   = document.getElementById('cv');
+const ctx  = cv.getContext('2d');
+const dustCv = document.getElementById('dustCv');
+const dctx = dustCv.getContext('2d');
+const wrap = document.getElementById('wrap');
+
+function resize() {
+  cv.width = wrap.clientWidth;   cv.height = wrap.clientHeight;
+  dustCv.width = cv.width;       dustCv.height = cv.height;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const DUST = [];
+function initDust(){
+  DUST.length=0;
+  for(let i=0;i<100;i++){
+    DUST.push({
+      x:Math.random()*cv.width, y:Math.random()*cv.height,
+      r:Math.random()*2, vx:(Math.random()-.5)*0.5, vy:-Math.random()*0.5,
+      a:Math.random(), maxA:0.5, phase:Math.random()*Math.PI*2,
+      col: ['rgba(180,120,255,','rgba(255,160,220,'][Math.floor(Math.random()*2)]
+    });
+  }
+}
+
+function updateDust(){
+  const W=cv.width, H=cv.height;
+  dctx.clearRect(0,0,W,H);
+  const t=Date.now()*0.001;
+  DUST.forEach(d=>{
+    d.x+=d.vx; d.y+=d.vy;
+    d.a = d.maxA * (0.5+0.5*Math.sin(t+d.phase));
+    if(d.y<-10) d.y=H+10; if(d.x<0) d.x=W; if(d.x>W) d.x=0;
+    dctx.beginPath(); dctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    dctx.fillStyle=d.col+d.a+')'; dctx.fill();
+  });
+}
+
+const G = {
+  running:false, over:false,
+  score:0, distance:0, speed:5,
+  combo:1, comboTimer:0, stamina:100, frame:0,
+  highScore:+(localStorage.getItem('hj6_hs')||0),
+};
+
+const P = {
+  x:150, y:0, w:26, h:46, vy:0, onGround:true,
+  jumping:false, sliding:false, slideT:0, jumpCount:0,
+  groundY:0, invincible:0, hitTimer:0,
+};
+
+const M = {
+  x: -120, y: 0, w: 100, h: 140, 
+  targetX: -120,
+};
+
+const WHISPERS = [
+  "Jangan menoleh ke belakang...",
+  "Maghrib sudah tiba.",
+  "Mimpi ini takkan berakhir.",
+  "Kamu tidak bisa pulang.",
+  "Mereka mengawasimu.",
+  "Ini hanya bayangan.",
+];
+
+let buildings=[], obstacles=[], pickups=[], rain=[];
+const OTYPES = [
+  {id:'trash', w:34, h:34, em:'🗑️', col:'#4a1a8a'},
+  {id:'pole',  w:12, h:60, em:'🏮', col:'#7b2fff'},
+  {id:'pylon', w:30, h:30, em:'🚧', col:'#ef9a9a'},
+  {id:'cat',   w:34, h:20, em:'🐈', col:'#e8d0ff'},
+];
+
+function initGameObjects() {
+  buildings = [];
+  for(let i=0; i<10; i++){
+    buildings.push({
+      x: i * 300, w: 100+Math.random()*150, h: 200+Math.random()*200,
+      col: ['#0d0520','#1a0d3a','#0d1a3a'][Math.floor(Math.random()*3)]
+    });
+  }
+  obstacles = []; pickups = [];
+  rain = [];
+  for(let i=0; i<150; i++) rain.push({
+    x:Math.random()*cv.width, y:Math.random()*cv.height,
+    l:10+Math.random()*20, s:10+Math.random()*10
+  });
+}
+
+function startGame(){
+  hide('sTitle','sOver','sCred','sEnd');
+  show('sIntro');
+  
+  const introTxt = document.getElementById('intro-text');
+  introTxt.style.opacity = 0;
+  
+  setTimeout(() => {
+    introTxt.style.opacity = 1;
+    setTimeout(() => {
+      introTxt.style.opacity = 0;
+      setTimeout(() => {
+        hide('sIntro');
+        initGameplay();
+      }, 1000);
+    }, 3000);
+  }, 100);
+}
+
+function initGameplay() {
+  G.running=true; G.over=false; G.score=0; G.distance=0; G.speed=5; G.stamina=100; G.frame=0;
+  P.groundY = cv.height * 0.75; P.y = P.groundY; P.vy=0; P.onGround=true; P.jumping=false;
+  M.x = -150; M.targetX = -150;
+  initGameObjects(); initDust();
+  show('hud','ctrlBar');
+  loop();
+}
+
+function loop(){
+  if(!G.running) return;
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function update(){
+  G.frame++;
+  G.distance += G.speed * 0.01;
+  G.speed = 5 + (G.distance * 0.05);
+
+  // Character movement
+  if(!P.onGround){
+    P.vy += 0.6; P.y += P.vy;
+    if(P.y >= P.groundY){ P.y=P.groundY; P.vy=0; P.onGround=true; P.jumping=false; P.jumpCount=0; }
+  }
+  if(P.sliding){ P.slideT--; if(P.slideT<=0) P.sliding=false; }
+  if(P.invincible > 0) P.invincible--;
+  if(P.hitTimer > 0) P.hitTimer--;
+
+  // Stamina logic
+  if(!P.sliding && G.stamina < 100) G.stamina += 0.1;
+  document.getElementById('sFill').style.width = G.stamina + '%';
+  document.getElementById('sFlash').style.display = G.stamina < 15 ? 'block' : 'none';
+  // Monster movement - chasing
+  M.targetX = -180 + (G.distance * 0.9) - (G.stamina * 0.4);
+  if(P.hitTimer > 0) M.targetX += 30; 
+  // Limit monster so it doesn't instantly catch up at the very end if player has some stamina
+  M.targetX = Math.min(M.targetX, P.x - M.w - 10);
+  
+  M.x += (M.targetX - M.x) * 0.012;
+  M.y = P.groundY - M.h + 20 + Math.sin(G.frame * 0.05) * 15;
+
+  if(M.x + M.w > P.x + 10) gameOver();
+
+  // Obstacle Spawing
+  if(G.frame % 100 === 0){
+    const t = OTYPES[Math.floor(Math.random()*OTYPES.length)];
+    obstacles.push({
+      x: cv.width + 50, y: P.groundY + P.h - t.h,
+      ...t
+    });
+  }
+
+  // Update Obstacles
+  for(let i=obstacles.length-1; i>=0; i--){
+    const o = obstacles[i];
+    o.x -= G.speed;
+    if(o.x < -100) obstacles.splice(i,1);
+    else if(P.invincible <= 0 && collision(P, o)){
+      hitPlayer();
+      obstacles.splice(i,1);
+    }
+  }
+
+  // Dream Whispers
+  if(G.frame % 400 === 0) notif(WHISPERS[Math.floor(Math.random()*WHISPERS.length)]);
+
+  // UI
+  document.getElementById('hLives').textContent = "❤️".repeat(5 - P.hits);
+  document.getElementById('hScore').textContent = Math.floor(G.distance * 10).toLocaleString('id-ID');
+  document.getElementById('dTxt').textContent = Math.max(0, Math.floor(200 - G.distance)) + ' m ke Rumah';
+  document.getElementById('dFill').style.width = Math.min(100, (G.distance/200)*100) + '%';
+
+  if(G.distance >= 200) gameWin();
+
+  // Story Fragments
+  const dreamEl = document.getElementById('dream-text');
+  if(G.frame % 300 === 0 && G.frame % 600 !== 0) {
+    dreamEl.textContent = [
+        "Pohon pisang itu terasa seperti sedang bernapas.",
+        "Kenapa gang ini tidak ada ujungnya?",
+        "Langitnya berwarna ungu pekat...",
+        "Aku ingat pernah berada di sini sebelumnya.",
+    ][Math.floor(Math.random()*4)];
+    dreamEl.style.opacity = 1;
+  } else if (G.frame % 300 === 0) {
+    dreamEl.style.opacity = 0;
+  }
+}
+
+function draw(){
+  ctx.fillStyle = '#0d0520'; ctx.fillRect(0,0,cv.width,cv.height);
+  
+  // Back buildings
+  ctx.fillStyle = '#1a0d3a';
+  buildings.forEach(b => {
+    b.x -= G.speed * 0.5;
+    if(b.x < -b.w) b.x = cv.width + 100;
+    ctx.fillRect(b.x, cv.height - b.h, b.w, b.h);
+  });
+
+  // Road
+  ctx.fillStyle = '#120820'; ctx.fillRect(0, P.groundY + P.h, cv.width, cv.height);
+  
+  // Rain
+  ctx.strokeStyle = 'rgba(180,120,255,0.2)';
+  rain.forEach(r => {
+    r.y += r.s; if(r.y > cv.height) r.y = -20;
+    ctx.beginPath(); ctx.moveTo(r.x, r.y); ctx.lineTo(r.x, r.y+r.l); ctx.stroke();
+  });
+
+  // Obstacles
+  obstacles.forEach(o => {
+    ctx.fillStyle = o.col; ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.font = '20px serif'; ctx.fillText(o.em, o.x, o.y + 20);
+  });
+
+  // Monster (Bayangan Maghrib)
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.85)';
+  ctx.shadowColor = '#ff0000'; ctx.shadowBlur = 20;
+  ctx.beginPath();
+  ctx.ellipse(M.x + M.w/2, M.y + M.h/2, M.w/2, M.h/2, 0, 0, Math.PI*2);
+  ctx.fill();
+  // Eyes
+  ctx.fillStyle = '#ff0000'; 
+  ctx.fillRect(M.x + M.w*0.3, M.y + M.h*0.3, 15, 6);
+  ctx.fillRect(M.x + M.w*0.6, M.y + M.h*0.3, 15, 6);
+  ctx.restore();
+
+  // Player
+  if(!(P.invincible > 0 && G.frame % 4 === 0)){
+    ctx.fillStyle = P.hitTimer > 0 ? '#ff0000' : '#7b2fff';
+    const py = P.sliding ? P.y + P.h/2 : P.y;
+    const ph = P.sliding ? P.h/2 : P.h;
+    ctx.fillRect(P.x, py, P.w, ph);
+    // Face
+    ctx.fillStyle = '#e8d0ff'; ctx.fillRect(P.x+15, py+8, 8, 8);
+  }
+
+  updateDust();
+}
+
+function collision(p, o){
+  const ph = p.sliding ? p.h/2 : p.h;
+  const py = p.sliding ? p.y + p.h/2 : p.y;
+  return p.x < o.x + o.w && p.x + p.w > o.x && py < o.y + o.h && py + ph > o.y;
+}
+
+function hitPlayer(){
+  if(P.invincible>0)return;
+  P.invincible = 60; P.hitTimer = 20; G.stamina = Math.max(0, G.stamina-20);
+  P.hits++;
+  addFloat('💥', P.x, P.y-20, '#ff0000');
+  if(P.hits >= 5) {
+    setTimeout(() => gameOver("Kamu terlalu lelah untuk lari..."), 300);
+  }
+}
+
+function doJump(){
+  if(!G.running || P.jumpCount >= 2 || (G.stamina < 5)) return;
+  P.vy = -14; P.onGround = false; P.jumping = true; P.jumpCount++;
+  G.stamina -= 5;
+}
+
+function doSlide(){
+  if(!G.running || P.sliding) return;
+  P.sliding = true; P.slideT = 40;
+}
+
+function doDash(){
+  if(!G.running || G.stamina < 30) return;
+  G.stamina -= 30; G.distance += 5;
+  addFloat('⚡ DASH', P.x, P.y-40, '#ffd6f0');
+}
+
+function notif(m){
+  const el = document.getElementById('notif');
+  el.textContent = m; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function addFloat(t,x,y,c){
+  const el = document.createElement('div'); el.className='ft'; el.textContent=t;
+  el.style.left=x+'px'; el.style.top=y+'px'; el.style.color=c;
+  wrap.appendChild(el); setTimeout(()=>el.remove(),1200);
+}
+
+function gameOver(){
+  G.running=false;
+  const finalScore = Math.floor(G.distance * 10);
+  if(finalScore > G.highScore){ G.highScore = finalScore; localStorage.setItem('hj6_hs', finalScore); }
+  document.getElementById('oScore').textContent = finalScore;
+  hide('hud','ctrlBar'); show('sOver');
+}
+
+function restartGame(){ hide('sOver','sEnd'); startGame(); }
+function goTitle(){ hide('hud','ctrlBar','sOver','sCred','sEnd'); show('sTitle'); document.getElementById('hsVal').textContent = G.highScore + ' m'; }
+
+function gameWin(){
+  G.running = false;
+  hide('hud','ctrlBar'); show('sEnd');
+}
+function showCred(){ hide('sTitle'); show('sCred'); }
+function show(...ids){ ids.forEach(id=>document.getElementById(id).classList.remove('off')); }
+function hide(...ids){ ids.forEach(id=>document.getElementById(id).classList.add('off')); }
+
+window.addEventListener('keydown', e => {
+    if(e.code==='ArrowUp' || e.code==='Space') doJump();
+    if(e.code==='ArrowDown') doSlide();
+    if(e.code==='KeyX') doDash();
+});
+
+goTitle();
+</script>
+</body>
+</html>
+
